@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Registro Médico</title>
+  <style>
+    body {
+      background-color: #001F3F;
+      color: white;
+      font-family: sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+    }
+    .form-group {
+      margin-bottom: 15px;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+    }
+    label {
+      margin-bottom: 5px;
+      font-size: 1.1em;
+    }
+    input {
+      font-size: 1.2em;
+      padding: 8px;
+      border-radius: 4px;
+      border: none;
+      width: 260px;
+    }
+    button {
+      font-size: 1.2em;
+      padding: 10px 20px;
+      border-radius: 5px;
+      border: none;
+      background-color: #2ECC40;
+      color: black;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+    button:hover {
+      background-color: #28b232;
+    }
+    .back-link {
+      margin-top: 20px;
+      font-size: 1em;
+      color: #7FDBFF;
+      text-decoration: underline;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <h1>Registro de Médico</h1>
+
+  <div class="form-group">
+    <label for="dni">DNI:</label>
+    <input type="number" id="dni" placeholder="Ingrese DNI">
+  </div>
+
+  <div class="form-group">
+    <label for="pin">PIN:</label>
+    <input type="password" id="pin" placeholder="Ingrese PIN">
+  </div>
+
+  <div class="form-group">
+    <label for="nombre">Nombre:</label>
+    <input type="text" id="nombre" placeholder="Ingrese Nombre">
+  </div>
+
+  <div class="form-group">
+    <label for="apellido">Apellido:</label>
+    <input type="text" id="apellido" placeholder="Ingrese Apellido">
+  </div>
+
+  <button onclick="registrar()">Registrar</button>
+
+  <!-- Enlace para volver al login -->
+  <div class="back-link" onclick="location.href='login_medico.html'">
+    ¿Ya tienes una cuenta? Inicia sesión
+  </div>
+
+  <script>
+    function registrar() {
+      const dni = document.getElementById('dni').value.trim();
+      const pin = document.getElementById('pin').value.trim();
+      const nombre = document.getElementById('nombre').value.trim();
+      const apellido = document.getElementById('apellido').value.trim();
+
+      if (!dni || !pin || !nombre || !apellido) {
+        alert('Por favor, completa todos los campos.');
+        return;
+      }
+
+      fetch('registro_medico.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: `dni=${dni}&pin=${pin}&nombre=${encodeURIComponent(nombre)}&apellido=${encodeURIComponent(apellido)}`
+      })
+      .then(res => res.json())
+      .then(data => {
+        alert(data.message);
+        if (data.success) {
+          location.href = 'login_medico.html';
+        }
+      });
+    }
+  </script>
+</body>
+</html>

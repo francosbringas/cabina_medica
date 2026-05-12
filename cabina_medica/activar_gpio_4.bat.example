@@ -1,0 +1,1 @@
+plink.exe usuario@ip -pw contra "python 3 /home/usuario/activar_gpio.py 4"

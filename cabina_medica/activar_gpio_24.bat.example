@@ -1,0 +1,1 @@
+echo. | plink -pw contra usuario@ip gpio write 24 1; sleep 3; gpio write 24 0
