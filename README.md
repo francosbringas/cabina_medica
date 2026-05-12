@@ -1,6 +1,6 @@
 # Cabina Médica
 
-Sistema end-to-end para atención médica automatizada con hardware físico integrado. Proyecto final de 6to año – E.E.T.P. N°478 (Mayo–Diciembre 2025).
+Sistema end-to-end para atención médica automatizada con hardware físico integrado. Proyecto final de 6to año – E.E.T.P. N°478 (Abril–Diciembre 2025).
 
 ## ¿Qué hace?
 
