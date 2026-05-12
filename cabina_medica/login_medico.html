@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Login – Médico</title>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      background-color: #001F3F;
+      font-family: sans-serif;
+      color: white;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+    h2 { font-size: 2em; margin-bottom: 20px; }
+    input {
+      font-size: 1em;
+      padding: 10px;
+      width: 250px;
+      margin: 5px 0;
+      border: none;
+      border-radius: 5px;
+    }
+    button {
+      font-size: 1em;
+      padding: 10px 20px;
+      margin-top: 15px;
+      border: none;
+      border-radius: 5px;
+      background-color: #2ECC40;
+      color: black;
+      cursor: pointer;
+    }
+    #error {
+      margin-top: 15px;
+      color: #FF4136;
+    }
+  </style>
+</head>
+<body>
+  <h2>Login Médico</h2>
+  <input type="text" id="dni" placeholder="DNI" />
+  <input type="password" id="pin" placeholder="PIN" />
+  <button onclick="loginMedico()">Ingresar</button>
+  <div id="error"></div>
+
+  <script>
+    function loginMedico() {
+      const dni = document.getElementById('dni').value.trim();
+      const pin = document.getElementById('pin').value.trim();
+
+      if (dni.length !== 8 || pin.length < 4) {
+        document.getElementById('error').textContent = "Datos inválidos.";
+        return;
+      }
+
+      fetch('login_medico.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: `dni=${dni}&pin=${pin}`
+      })
+      .then(res => res.json())
+      .then(data => {
+        if (data.success) {
+          sessionStorage.setItem('dni_medico', dni);
+          sessionStorage.setItem('apellido_medico', data.apellido || '');
+          window.location.href = 'llamada_medico.html';
+        } else {
+          document.getElementById('error').textContent = "Credenciales incorrectas.";
+        }
+      })
+      .catch(() => {
+        document.getElementById('error').textContent = "Error de conexión.";
+      });
+    }
+  </script>
+</body>
+</html>

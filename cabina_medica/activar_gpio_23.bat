@@ -1,0 +1,1 @@
+echo. | plink -pw raspi informatica@10.0.251.251 gpio write 23 1; sleep 3; gpio write 23 0

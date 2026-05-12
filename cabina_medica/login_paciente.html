@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Login – Paciente</title>
+  <style>
+    html, body { margin:0; padding:0; width:100vw; height:100vh; overflow:hidden; }
+    body {
+      background:#0b0f16; color:white; font-family:sans-serif;
+      display:flex; flex-direction:column; align-items:center; justify-content:center;
+    }
+    #display {
+      width:300px; height:50px; background:#111; color:#0f0;
+      font-size:2em; text-align:right; padding:10px; border-radius:5px;
+      margin-bottom:20px; letter-spacing:5px;
+    }
+    .teclado { display:grid; grid-template-columns:repeat(3,100px); grid-gap:10px; }
+    .tecla {
+      width:100px; height:60px; font-size:1.5em; border:none; border-radius:5px;
+      cursor:pointer; background:#2ECC40; color:black;
+    }
+    #borrar, #continuar, #volver {
+      width:120px; height:60px; font-size:1.5em; border:none; border-radius:5px;
+      cursor:pointer;
+    }
+    #borrar { background:#FF4136; color:white; }
+    #continuar { background:#2ECC40; color:black; }
+    #volver { background:#AAAAAA; color:black; }
+    .botones { display:flex; gap:10px; margin-top:20px; flex-wrap:wrap; justify-content:center; }
+    .link-reg { margin-top:20px; color:#7FDBFF; text-decoration:underline; cursor:pointer; }
+    #modal {
+      position:fixed; top:0; left:0; width:100vw; height:100vh;
+      background:rgba(0,0,0,0.75); display:none;
+      align-items:center; justify-content:center;
+    }
+    #modal .caja {
+      background:white; color:black; padding:20px; border-radius:8px;
+      text-align:center; max-width:80%;
+    }
+    #modal .caja button {
+      margin-top:15px; padding:10px 20px; border:none;
+      background:#0074D9; color:white; border-radius:5px; cursor:pointer;
+    }
+  </style>
+</head>
+<body>
+  <h2 style="font-size: 50px;">Inicie sesión</h2>
+  <div id="display">Ingrese DNI</div>
+  <div class="teclado" id="teclado"></div>
+  <div class="botones">
+    <button id="borrar"   type="button">Borrar</button>
+    <button id="volver"   type="button">Volver</button>
+    <button id="continuar" type="button">Continuar</button>
+  </div>
+
+  <div id="modal">
+    <div class="caja">
+      <div id="modal-msg"></div>
+      <button id="modal-ok">OK</button>
+    </div>
+  </div>
+
+  <script>
+    function showModal(msg) {
+      document.getElementById('modal-msg').textContent = msg;
+      document.getElementById('modal').style.display = 'flex';
+    }
+    document.getElementById('modal-ok').onclick = () => {
+      document.getElementById('modal').style.display = 'none';
+    };
+    
+    fetch('gpio21_control.php', {
+      method: 'POST',
+      headers: {'Content-type': 'application/x-www-form-urlencoded'},
+      body: 'action=on'
+    });
+    
+    setInterval(() => {
+      window.location.href = "espera.html"
+    }, 200000);
+
+    let fase='dni', input='', dni='', pin='';
+    const display = document.getElementById('display');
+    const teclado = document.getElementById('teclado');
+    const continuar = document.getElementById('continuar');
+    const borrar = document.getElementById('borrar');
+    const volver = document.getElementById('volver');
+
+    for(let i=1;i<=9;i++){
+      let b = document.createElement('button');
+      b.textContent=i; b.className='tecla'; b.type='button';
+      b.onclick = () => {
+        if(input.length < (fase==='dni'?8:4)){
+          input+=i; display.textContent=input;
+        }
+      };
+      teclado.appendChild(b);
+    }
+    teclado.appendChild(document.createElement('div'));
+    let z = document.createElement('button');
+    z.textContent='0'; z.className='tecla'; z.type='button';
+    z.onclick = () => {
+      if(input.length < (fase==='dni'?8:4)){
+        input+='0'; display.textContent=input;
+      }
+    };
+    teclado.appendChild(z);
+    teclado.appendChild(document.createElement('div'));
+
+    borrar.onclick = () => {
+      input=''; display.textContent = (fase==='dni'?'Ingrese DNI':'Ingrese PIN');
+    };
+
+    volver.onclick = () => {
+      if (fase === 'pin') {
+        fase = 'dni';
+        input = '';
+        display.textContent = 'Ingrese DNI';
+      }
+    };
+
+    continuar.onclick = () => {
+      if(fase==='dni'){
+        if(input.length<8){ showModal('Ingrese un DNI válido (8 dígitos)'); return; }
+        dni=input; input=''; fase='pin'; display.textContent='Ingrese PIN';
+      } else {
+        if(input.length<4){ showModal('PIN debe tener 4 dígitos'); return; }
+        pin=input;
+        fetch('login_paciente.php',{
+          method:'POST',
+          headers:{'Content-Type':'application/x-www-form-urlencoded'},
+          body:`dni=${dni}&pin=${pin}`
+        })
+        .then(r=>r.json()).then(d=>{
+          if(d.success) {
+            sessionStorage.setItem('login_exitoso', '1');
+            window.location.href = 'espera_llamada.php';
+          } else {
+            fetch('gpio21_control.php', {
+              method: 'POST',
+              headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+              body: 'action=off'
+            }).then(()=>{
+              setTimeout(()=>{
+                fetch('gpio21_control.php', {
+                  method: 'POST',
+                  headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+                  body: 'action=on'
+                });
+              }, 2000); // o 3000 para 3 segundos
+            });
+            showModal("DNI o PIN incorrecto");
+            fase='dni'; input=''; display.textContent='Ingrese DNI';
+          }
+        })
+        .catch(() => {
+          showModal("Error al conectarse con el servidor");
+          fase='dni'; input=''; display.textContent='Ingrese DNI';
+        });
+      }
+    };
+  </script>
+</body>
+</html>
+
