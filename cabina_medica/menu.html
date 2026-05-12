@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Cabina Médica - Menú Principal</title>
+  <style>
+    body {
+      background-color: #001F3F;
+      color: white;
+      font-family: sans-serif;
+      text-align: center;
+      padding: 80px 20px;
+    }
+    h1 {
+      font-size: 32px;
+      margin-bottom: 20px;
+    }
+    p {
+      font-size: 18px;
+      max-width: 600px;
+      margin: 0 auto 40px auto;
+    }
+    .boton {
+      padding: 15px 30px;
+      font-size: 20px;
+      background-color: #2ECC40;
+      border: none;
+      color: black;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    .boton:hover {
+      background-color: #28b232;
+    }
+  </style>
+</head>
+<body>
+  <h1>Bienvenido a la Cabina Médica</h1>
+  <p>Este sistema le permitirá realizar chequeos médicos básicos como medición de pulso, oxígeno y temperatura. 
+    También podrá visualizar sus resultados y conectarse con un médico mediante videollamada.</p>
+  <p> Para ingresar debe iniciar sesión como paciente o como médico </p>
+  <p> ¿Eres paciente? </p> <p> o </p> <p> ¿Médico? </p>
+  <button class="boton" onclick="window.location.href='login_medico.html'">Soy médico</button>
+  <button class="boton" onclick="window.location.href='login_paciente.html'">Soy paciente</button>
+</body>
+</html>
