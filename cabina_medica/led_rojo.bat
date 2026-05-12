@@ -1,1 +1,0 @@
-plink.exe informatica@10.0.251.251 -pw raspi "python 3 /home/informatica/led.py rojo"
