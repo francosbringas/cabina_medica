@@ -103,6 +103,16 @@ Una cabina física con sensores y actuadores controlados por una Raspberry Pi 3,
 
 Este proyecto fue desarrollado aprendiendo en la marcha bajo restricciones de tiempo escolar. Implicó resolver en tiempo real: integración PHP↔Python sobre SSH, control de hardware físico desde una interfaz web, sincronización de estados entre dos dispositivos distintos, y evaluación práctica de tres plataformas de videollamada hasta encontrar la que funcionaba dentro de las restricciones del entorno.
 
+## Desafíos Técnicos y Gestión de Crisis
+
+El desarrollo de este proyecto se llevó a cabo bajo un entorno de alta volatilidad de requisitos y cambios estructurales en el equipo, lo que exigió una respuesta técnica inmediata y adaptabilidad:
+
+ - **Asunción de Roles Críticos:** Debido a la reasignación de integrantes del equipo hacia otras tareas, asumí la responsabilidad integral de áreas inicialmente fuera de mi alcance, incluyendo la normalización de la base de datos MySQL, la configuración del sistema operativo de la Raspberry Pi 3 y la programación de la lógica de hardware (GPIO).
+ - **Pivotaje Tecnológico y Adaptabilidad:** El sistema atravesó múltiples refactorizaciones completas debido a cambios constantes en los requerimientos. Esto incluyó la evaluación e integración sucesiva de tres plataformas de videollamada (Jitsi, Daily.co y finalmente Whereby) y el rediseño total de la interfaz de usuario para operar exclusivamente mediante mouse, eliminando la dependencia del teclado por restricciones físicas de la cabina.
+ - **Control de Infraestructura Crítica:** Implementé la lógica de control para la **ePDU IP Power** mediante protocolos HTTP, permitiendo la gestión energética secuencial de dispositivos (como la activación temporizada de una bomba de agua para el servicio de hidratación del paciente).
+ - **Integración de Sistemas Heterogéneos:** Logré la comunicación fluida entre un servidor Windows (XAMPP) y la Raspberry Pi (Linux) mediante la automatización de túneles SSH con Plink y scripts de procesamiento por lotes (.bat), asegurando que los actuadores respondieran en tiempo real a las órdenes del médico.
+ - **Liderazgo Técnico:** Ante la disparidad de conocimientos en el grupo, actué como nexo técnico, capacitando al resto de los integrantes sobre el flujo del sistema para la defensa final del proyecto y asegurando que el MVP (Producto Mínimo Viable) fuera funcional para la presentación.
+
 ## Autor
 
 **Bringas Franco Sebastián**  
